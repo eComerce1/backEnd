@@ -24,3 +24,31 @@ module.exports = {
   sequelize,
   Product,
 };
+
+const User = require("./User");
+const Product = require("./Product");
+const Order = require("./Order");
+const Category = require("./Category");
+const Admin = require("./Admin");
+
+User.initModel(sequelize);
+Product.initModel(sequelize);
+Order.initModel(sequelize);
+Category.initModel(sequelize);
+Admin.initModel(sequelize);
+
+User.hasMany(Order);
+Order.hasMany(Product);
+Order.belongsTo(User);
+Product.hasMany(Order);
+Product.belongsTo(Category);
+Category.hasMany(Product);
+
+module.exports = {
+  sequelize,
+  User,
+  Product,
+  Order,
+  Category,
+  Admin,
+};
