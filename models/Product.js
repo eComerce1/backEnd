@@ -1,31 +1,23 @@
-const { Model, Datatypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 
 class Product extends Model {
   static initModel(sequelize) {
-    Product.init({
-      id: {
-        type: Datatypes.BIGINT.UNSIGNED,
-        primaryKey: true,
-        autoIncrement: true,
+    Product.init(
+      {
+        id: {
+          type: DataTypes.BIGINT.UNSIGNED,
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        name: { type: DataTypes.STRING, allowNull: false },
+        price: { type: DataTypes.FLOAT, allowNull: false },
+        img: { type: DataTypes.STRING, allowNull: false },
+        description: { type: DataTypes.STRING, allowNull: false },
+        complete_description: { type: DataTypes.TEXT, allowNull: false },
+        stock: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
       },
-      name: {
-        type: Datatypes.STRING,
-      },
-      price: {
-        type: Datatypes.FLOAT,
-      },
-      image: {
-        type: Datatypes.STRING,
-      },
-      description: {
-        type: Datatypes.STRING,
-      },
-      stock: {
-        type: Datatypes.INT,
-      },
-    });
-
-    return Product;
+      { sequelize, modelName: "product" }
+    );
   }
 }
 
