@@ -14,12 +14,25 @@
  */
 
 require("dotenv").config();
+const { sequelize } = require("../models");
 
 async function runAllSeeders() {
-  await require("./productSeeder")();
+  try {
+    await sequelize.authenticate();
+    console.log("[Database] Conexión establecida con éxito.");
 
-  console.log("[Database] ¡Los datos de prueba fueron insertados!");
-  process.exit();
+    await sequelize.sync();
+    console.log("[Database] Tablas sincronizadas.");
+
+    await require("./productSeeder")();
+    console.log("[Database] ¡Los datos de prueba fueron insertados!");
+
+    process.exit();
+  } catch (error) {
+    console.error("❌ Error al ejecutar los seeders:", error);
+    process.exit(1);
+    r;
+  }
 }
 
 runAllSeeders();

@@ -4,7 +4,7 @@ class OrderProduct extends Model {
   static initModel(sequelize) {
     OrderProduct.init(
       {
-        cantidad: {
+        amount: {
           type: DataTypes.BIGINT(20),
           allowNull: false,
           defaultValue: 1,

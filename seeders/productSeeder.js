@@ -1,9 +1,8 @@
-const Product = require("../models/Product");
+const { Product } = require("../models");
 
 module.exports = async () => {
   const products = [
     {
-      id: "1",
       name: "Powerbeats Pro 2 Jet Black",
       price: 249.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/powerbeats-pro-2/pdp/product-carousel/jet-black/pc-pbpro2-jet-black-p01.jpg.large.2x.jpg",
@@ -13,7 +12,6 @@ module.exports = async () => {
       stock: 130,
     },
     {
-      id: "2",
       name: "Powerbeats Pro 2 Quick Sand",
       price: 249.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/powerbeats-pro-2/pdp/product-carousel/quick-sand/pc-pbpro2-quick-sand-p01.jpg.large.2x.jpg",
@@ -23,7 +21,6 @@ module.exports = async () => {
       stock: 200,
     },
     {
-      id: "3",
       name: "Powerbeats Pro 2 Hyper Purple",
       price: 249.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/powerbeats-pro-2/pdp/product-carousel/hyper-purple/pc-pbpro2-hyper-purple-p01.jpg.large.2x.jpg",
@@ -33,7 +30,6 @@ module.exports = async () => {
       stock: 150,
     },
     {
-      id: "4",
       name: "Powerbeats Pro 2 Electric Orange",
       price: 249.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/powerbeats-pro-2/pdp/product-carousel/electric-orange/pc-pbpro2-electric-orange-p01.jpg.large.2x.jpg",
@@ -43,7 +39,6 @@ module.exports = async () => {
       stock: 180,
     },
     {
-      id: "5",
       name: "Beats Studio Pro Black",
       price: 349.99,
       img: "httphttps://www.beatsbydre.com/content/dam/beats/web/product/headphones/studiopro-wireless/pdp/product-carousel/black/alt/black-01-studiopro-cnet.jpg.large.2x.jpg",
@@ -53,7 +48,6 @@ module.exports = async () => {
       stock: 210,
     },
     {
-      id: "6",
       name: "Beats Studio Pro Deep Brown",
       price: 349.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/headphones/studiopro-wireless/pdp/product-carousel/deep-brown/alt/brown-01-studiopro-cnet.jpg.large.2x.jpg",
@@ -63,7 +57,6 @@ module.exports = async () => {
       stock: 100,
     },
     {
-      id: "7",
       name: "Beats Studio Pro Navy",
       price: 349.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/headphones/studiopro-wireless/pdp/product-carousel/navy/alt/navy-01-studiopro-cnet.jpg.large.2x.jpg",
@@ -73,7 +66,6 @@ module.exports = async () => {
       stock: 143,
     },
     {
-      id: "8",
       name: "Beats Studio Pro Sandstone",
       price: 349.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/headphones/studiopro-wireless/pdp/product-carousel/sandstone/alt/sandstone-01-studiopro-cnet.jpg.large.2x.jpg",
@@ -83,7 +75,6 @@ module.exports = async () => {
       stock: 103,
     },
     {
-      id: "9",
       name: "Beats Solo 4 Matte Black",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/headphones/solo4-wireless/pdp/product-carousel/matte-black/black-01-solo4-cnet.jpg.large.2x.jpg",
@@ -93,7 +84,6 @@ module.exports = async () => {
       stock: 0,
     },
     {
-      id: "10",
       name: "Beats Solo 4 Slate Blue",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/headphones/solo4-wireless/pdp/product-carousel/slate-blue/blue-01-solo4-cnet.jpg.large.2x.jpg",
@@ -103,7 +93,6 @@ module.exports = async () => {
       stock: 39,
     },
     {
-      id: "11",
       name: "Beats Solo 4 Cloud Pink",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/headphones/solo4-wireless/pdp/product-carousel/cloud-pink/pink-01-solo4-cnet.jpg.large.2x.jpg",
@@ -113,7 +102,6 @@ module.exports = async () => {
       stock: 109,
     },
     {
-      id: "12",
       name: "Beats Solo 4 Sandy Liang Limited Edition",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/headphones/solo4-wireless/pdp/product-carousel/sandy-liang/sandy-liang-01-solo4-cnet.jpg.large.2x.jpg",
@@ -123,7 +111,6 @@ module.exports = async () => {
       stock: 144,
     },
     {
-      id: "13",
       name: "Beats Pill Matte Black",
       price: 149.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/speakers/beats-pill/pdp/product-carousel/black/black-01-beatspill-wired.jpg.large.2x.jpg",
@@ -133,7 +120,6 @@ module.exports = async () => {
       stock: 200,
     },
     {
-      id: "14",
       name: "Beats Pill Statement Red",
       price: 149.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/speakers/beats-pill/pdp/product-carousel/red/red-01-beatspill-wired.jpg.large.2x.jpg",
@@ -143,7 +129,6 @@ module.exports = async () => {
       stock: 439,
     },
     {
-      id: "15",
       name: "Beats Pill Champagne Gold",
       price: 149.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/speakers/beats-pill/pdp/product-carousel/gold/gold-01-beatspill-wired.jpg.large.2x.jpg",
@@ -153,7 +138,6 @@ module.exports = async () => {
       stock: 378,
     },
     {
-      id: "16",
       name: "Beats Solo Buds Matte Black",
       price: 79.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/solo-buds/pdp/product-carousel/matte-black/black-01-solobuds.jpg.large.2x.jpg",
@@ -163,7 +147,6 @@ module.exports = async () => {
       stock: 327,
     },
     {
-      id: "17",
       name: "Beats Solo Buds Artic Purple",
       price: 79.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/solo-buds/pdp/product-carousel/arctic-purple/purple-01-solobuds.jpg.large.2x.jpg",
@@ -173,7 +156,6 @@ module.exports = async () => {
       stock: 278,
     },
     {
-      id: "18",
       name: "Beats Solo Buds Transparent Red",
       price: 79.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/solo-buds/pdp/product-carousel/transparent-red/red-01-solobuds.jpg.large.2x.jpg",
@@ -183,7 +165,6 @@ module.exports = async () => {
       stock: 379,
     },
     {
-      id: "19",
       name: "Beats Solo Buds Storm Gray",
       price: 79.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/solo-buds/pdp/product-carousel/storm-gray/gray-01-solobuds.jpg.large.2x.jpg",
@@ -193,7 +174,6 @@ module.exports = async () => {
       stock: 217,
     },
     {
-      id: "20",
       name: "Beats Studio Buds + Black / Gold",
       price: 169.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/studio-buds-plus/pdp/product-carousel/black/alt/studiobudsplus-blackgold-01.jpg.large.2x.jpg",
@@ -203,7 +183,6 @@ module.exports = async () => {
       stock: 196,
     },
     {
-      id: "21",
       name: "Beats Studio Buds + Ivory",
       price: 169.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/studio-buds-plus/pdp/product-carousel/ivory/alt/studiobudsplus-ivory-01.jpg.large.2x.jpg",
@@ -213,7 +192,6 @@ module.exports = async () => {
       stock: 0,
     },
     {
-      id: "22",
       name: "Beats Studio Buds + Transparent",
       price: 169.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/studio-buds-plus/pdp/product-carousel/transparent/alt/studiobudsplus-transparent-01.jpg.large.2x.jpg",
@@ -223,7 +201,6 @@ module.exports = async () => {
       stock: 47,
     },
     {
-      id: "23",
       name: "Beats Fit Pro Beats Black",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/studio-buds-plus/pdp/product-carousel/transparent/alt/studiobudsplus-transparent-01.jpg.large.2x.jpg",
@@ -233,7 +210,6 @@ module.exports = async () => {
       stock: 487,
     },
     {
-      id: "24",
       name: "Beats Fit Pro Beats White",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-fit-pro/pdp/product-carousel/white/alt/white-01.jpg.large.2x.jpg",
@@ -243,7 +219,6 @@ module.exports = async () => {
       stock: 213,
     },
     {
-      id: "25",
       name: "Beats Fit Pro Sage Gray",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-fit-pro/pdp/product-carousel/sage-gray/alt/gray-01.jpg.large.2x.jpg",
@@ -253,7 +228,6 @@ module.exports = async () => {
       stock: 279,
     },
     {
-      id: "26",
       name: "Beats Fit Pro Stone Purple",
       price: 199.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-fit-pro/pdp/product-carousel/stone-purple/alt/stonepurple-01.jpg.large.2x.jpg",
@@ -263,7 +237,6 @@ module.exports = async () => {
       stock: 301,
     },
     {
-      id: "27",
       name: "Beats Flex Flame Blue",
       price: 69.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-flex/pdp/product-carousel/flame-blue/pc-beats-flex-flame-blue-earbuds.jpg.large.2x.jpg",
@@ -273,7 +246,6 @@ module.exports = async () => {
       stock: 80,
     },
     {
-      id: "28",
       name: "Beats Flex Beats Black",
       price: 69.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-flex/pdp/product-carousel/black/pc-beats-flex-black-earbuds.jpg.large.2x.jpg",
@@ -283,7 +255,6 @@ module.exports = async () => {
       stock: 50,
     },
     {
-      id: "29",
       name: "Beats Flex Yuzu Yellow",
       price: 69.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-flex/pdp/product-carousel/yuzu-yellow/pc-beats-flex-yuzu-yellow-earbuds.jpg.large.2x.jpg",
@@ -293,7 +264,6 @@ module.exports = async () => {
       stock: 19,
     },
     {
-      id: "30",
       name: "Beats Flex Smoke Gray",
       price: 69.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-flex/pdp/product-carousel/smoke-gray/pc-beats-flex-smoke-gray-earbuds.jpg.large.2x.jpg",
@@ -303,7 +273,6 @@ module.exports = async () => {
       stock: 58,
     },
     {
-      id: "31",
       name: "Beats iPhone 16 Pro Max Case with MagSafe",
       price: 49.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/accessories/phone-cases/iphone-16/pdp/product-carousel/iphone-16-pro-max/riptide-blue/pc-iphone-16-pro-max-riptide-blue-01.jpg.large.2x.jpg",
@@ -313,7 +282,6 @@ module.exports = async () => {
       stock: 409,
     },
     {
-      id: "32",
       name: "Beats iPhone 16 Pro Case with MagSafe",
       price: 49.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/accessories/phone-cases/iphone-16/pdp/product-carousel/iphone-16-pro/summit-stone/pc-iphone-16-pro-summit-stone-01.jpg.large.2x.jpg",
@@ -323,7 +291,6 @@ module.exports = async () => {
       stock: 436,
     },
     {
-      id: "33",
       name: "Beats iPhone 16 Plus Case with MagSafe",
       price: 49.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/accessories/phone-cases/iphone-16/pdp/product-carousel/iphone-16-plus/sunset-purple/pc-iphone-16-plus-sunset-purple-01.jpg.large.2x.jpg",
@@ -333,7 +300,6 @@ module.exports = async () => {
       stock: 649,
     },
     {
-      id: "34",
       name: "Beats iPhone 16 Case with MagSafe",
       price: 49.99,
       img: "https://www.beatsbydre.com/content/dam/beats/web/product/accessories/phone-cases/iphone-16/pdp/product-carousel/iphone-16/sunrise-pink/pc-iphone-16-sunrise-pink-01.jpg.large.2x.jpg",
@@ -343,7 +309,7 @@ module.exports = async () => {
       stock: 590,
     },
   ];
-
+  await Product.destroy({ where: {} });
   await Product.bulkCreate(products);
   console.log("[Database] Se corrió el seeder de productos.");
 };
