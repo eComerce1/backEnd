@@ -1,8 +1,8 @@
-const Product = require("../models/Product");
+const { Product } = require("../models");
 
 async function index(req, res) {
   try {
-    const products = await Product.find();
+    const products = await Product.findAll();
     return res.json({ products });
   } catch (error) {
     return res.status(500).json({ msg: error.message });
