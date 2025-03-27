@@ -1,12 +1,11 @@
 const { Model, DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
 
 class OrderProduct extends Model {
   static initModel(sequelize) {
-    Product.init(
+    OrderProduct.init(
       {
         cantidad: {
-          type: DataTypes.BIGINT.UNSIGNED,
+          type: DataTypes.BIGINT(20),
           allowNull: false,
           defaultValue: 1,
         },
