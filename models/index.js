@@ -3,6 +3,7 @@ const { Sequelize } = require("sequelize");
 const dbConnectionString = process.env.DB_CONNECTION_STRING;
 
 const sequelize = new Sequelize(dbConnectionString, {
+  dialectModule: require("pg"),
   logging: false,
 });
 
