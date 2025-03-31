@@ -24,12 +24,13 @@ async function runAllSeeders() {
     await sequelize.sync();
     console.log("[Database] Tablas sincronizadas.");
 
+    await require("./categorySeeder")();
     await require("./productSeeder")();
     console.log("[Database] ¡Los datos de prueba fueron insertados!");
 
     process.exit();
   } catch (error) {
-    console.error("❌ Error al ejecutar los seeders:", error);
+    console.error("Error al ejecutar los seeders:", error);
     process.exit(1);
     r;
   }
