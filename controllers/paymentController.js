@@ -1,8 +1,10 @@
 const mercadopago = require("mercadopago");
 
-mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN, // Usa una variable de entorno para seguridad
+const mp = new mercadopago.MercadoPagoConfig({
+  accessToken: process.env.MP_ACCESS_TOKEN,
 });
+
+const preference = new mercadopago.Preference(mp); // 🔹 Se crea una instancia de Preference
 
 async function createPreference(req, res) {
   try {
@@ -15,17 +17,19 @@ async function createPreference(req, res) {
       currency_id: "UYU",
     }));
 
-    const preference = await mercadopago.preferences.create({
+    const preferenceData = {
       items,
       back_urls: {
-        success: "https://tu-frontend.com/success", //CAMBIAR
-        failure: "https://tu-frontend.com/failure", //CAMBIAR
-        pending: "https://tu-frontend.com/pending", //CAMBIAR
+        success: "https://tu-frontend.com/success", // CAMBIAR
+        failure: "https://tu-frontend.com/failure", // CAMBIAR
+        pending: "https://tu-frontend.com/pending", // CAMBIAR
       },
       auto_return: "approved",
-    });
+    };
 
-    res.json({ init_point: preference.body.init_point });
+    const response = await preference.create({ body: preferenceData }); // 🔹 Usar la instancia de Preference
+
+    res.json({ init_point: response.init_point });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
