@@ -20,9 +20,9 @@ async function createPreference(req, res) {
     const preferenceData = {
       items,
       back_urls: {
-        success: "https://tu-frontend.com/success", // CAMBIAR
-        failure: "https://tu-frontend.com/failure", // CAMBIAR
-        pending: "https://tu-frontend.com/pending", // CAMBIAR
+        success: "http://localhost:5173/success", // CAMBIAR
+        failure: "http://localhost:5173/failure", // CAMBIAR
+        pending: "http://localhost:5173/pending", // CAMBIAR
       },
       auto_return: "approved",
     };
