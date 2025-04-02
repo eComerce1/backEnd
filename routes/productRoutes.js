@@ -4,5 +4,6 @@ const productController = require("../controllers/productController");
 const { expressjwt: checkJwt } = require("express-jwt");
 
 router.get("/", productController.index);
-//router.get("/:name", productController.show);
+router.get("/:name", productController.show);
+
 module.exports = router;

@@ -11,7 +11,7 @@ async function index(req, res) {
 async function show(req, res) {
   try {
     const { name } = req.params; // Accede al nombre del producto desde los parámetros de la URL
-    const product = await Product.findOne({ name: name });
+    const product = await Product.findOne({ where: { name: name } });
 
     if (!product) {
       return res.status(404).json({ msg: "Product not found" });
@@ -24,4 +24,5 @@ async function show(req, res) {
 }
 module.exports = {
   index,
+  show,
 };
