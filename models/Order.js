@@ -12,6 +12,11 @@ class Order extends Model {
         address: { type: DataTypes.STRING, allowNull: false },
         phone: { type: DataTypes.STRING, allowNull: false },
         paymentMethod: { type: DataTypes.STRING, allowNull: false },
+        status: {
+          type: DataTypes.ENUM("cart", "pending", "completed", "cancelled"),
+          allowNull: false,
+          defaultValue: "cart",
+        },
       },
       { sequelize, modelName: "order" }
     );
