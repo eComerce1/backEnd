@@ -160,6 +160,16 @@ module.exports = async () => {
         categoryId: categories.Speakers?.id,
       },
       {
+        name: "Beats Pill Black",
+        price: 149.99,
+        img: "https://www.beatsbydre.com/content/dam/beats/web/product/speakers/beats-pill/pdp/product-carousel/black/black-01-beatspill-wired.jpg.large.2x.jpg",
+        description: "Built for athlets.",
+        complete_description:
+          "The Beats Pill speaker offers extended battery life, tested by Apple with a standard playlist at 50% volume, though actual battery life varies with usage and environment. It features IP67 dust and water resistance, making it suitable for both indoor and outdoor use, although this resistance may decrease over time. Lossless audio playback is supported with compatible apps and services. Beats Pill integrates with both Apple and Android ecosystems, requiring compatible operating system software and Google Play Services for Android devices. New Apple Music subscribers can receive three months free when connecting the Beats Pill to an eligible Apple device. This speaker represents an upgrade over the Beats Pill+, offering enhanced features. Additionally, the Beats Pill supports fast charging, providing a significant amount of playback time from just a 10-minute charge. As with all battery-powered devices, real-world performance will depend on specific conditions and usage patterns.",
+        stock: 200,
+        categoryId: categories.Speakers?.id,
+      },
+      {
         name: "Beats Solo Buds Matte Black",
         price: 79.99,
         img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/solo-buds/pdp/product-carousel/matte-black/black-01-solobuds.jpg.large.2x.jpg",
@@ -227,46 +237,6 @@ module.exports = async () => {
         complete_description:
           "The Beats Studio Buds + offer improved battery life compared to the first-generation model, with Apple's testing showing extended playback time under controlled conditions. They support Dolby Atmos (with compatible content and devices) and feature IPX4 sweat and water resistance, suitable for non-water sports and exercise. Battery life varies with usage and environment, and the charging case is not water-resistant. These earbuds are designed for seamless integration with both Apple and Android devices. Apple users benefit from iCloud features, Siri compatibility, and Find My Beats integration, while Android users can utilize Google Fast Pair, Audio Switch, and Find My Device. Both platforms require compatible operating systems and Google Play Services for Android features. Additionally, new Apple Music subscribers can get three months free when pairing the Beats Studio Buds + with an eligible Apple device. The earbuds also offer fast charging, providing a significant amount of playback time from just a 5-minute charge. Apple emphasizes the sustainability of the product's packaging, excluding adhesives, inks, and coatings from their plastic content and weight calculations.",
         stock: 47,
-        categoryId: categories.Earbuds?.id,
-      },
-      {
-        name: "Beats Fit Pro Beats Black",
-        price: 199.99,
-        img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/studio-buds-plus/pdp/product-carousel/transparent/alt/studiobudsplus-transparent-01.jpg.large.2x.jpg",
-        description: "Built for athlets.",
-        complete_description:
-          "The Beats Fit Pro earbuds offer up to 6 hours of listening time with Active Noise Cancellation and Transparency enabled, or up to 7 hours with them off, as tested by Apple. Battery life varies with usage and environment. They are sweat and water-resistant (IPX4), suitable for non-water sports, but the charging case is not water-resistant. The earbuds support Spatial Audio with personalized profiles (requiring an iPhone with TrueDepth camera) and Dolby Atmos (with compatible content and devices). These earbuds integrate seamlessly with both Apple and Android ecosystems. Apple users benefit from iCloud features, Automatic Switching, Audio Sharing, Siri, and Find My Beats integration, requiring compatible macOS, iOS, iPadOS, watchOS, and tvOS versions. Android users can utilize the Beats app, which requires Android 9.0 or later, and the ear tip fit test is available on iOS 15.1 or later, or via the Beats app for Android. New Apple Music subscribers can receive three months free when pairing the Beats Fit Pro with an eligible Apple device. Apple's battery life testing involved repeated cycles of full earbud and charging case discharge, highlighting the earbuds' and case's combined battery performance.",
-        stock: 487,
-        categoryId: categories.Earbuds?.id,
-      },
-      {
-        name: "Beats Fit Pro Beats White",
-        price: 199.99,
-        img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-fit-pro/pdp/product-carousel/white/alt/white-01.jpg.large.2x.jpg",
-        description: "Built for athlets.",
-        complete_description:
-          "The Beats Fit Pro earbuds offer up to 6 hours of listening time with Active Noise Cancellation and Transparency enabled, or up to 7 hours with them off, as tested by Apple. Battery life varies with usage and environment. They are sweat and water-resistant (IPX4), suitable for non-water sports, but the charging case is not water-resistant. The earbuds support Spatial Audio with personalized profiles (requiring an iPhone with TrueDepth camera) and Dolby Atmos (with compatible content and devices). These earbuds integrate seamlessly with both Apple and Android ecosystems. Apple users benefit from iCloud features, Automatic Switching, Audio Sharing, Siri, and Find My Beats integration, requiring compatible macOS, iOS, iPadOS, watchOS, and tvOS versions. Android users can utilize the Beats app, which requires Android 9.0 or later, and the ear tip fit test is available on iOS 15.1 or later, or via the Beats app for Android. New Apple Music subscribers can receive three months free when pairing the Beats Fit Pro with an eligible Apple device. Apple's battery life testing involved repeated cycles of full earbud and charging case discharge, highlighting the earbuds' and case's combined battery performance.",
-        stock: 213,
-        categoryId: categories.Earbuds?.id,
-      },
-      {
-        name: "Beats Fit Pro Sage Gray",
-        price: 199.99,
-        img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-fit-pro/pdp/product-carousel/sage-gray/alt/gray-01.jpg.large.2x.jpg",
-        description: "Built for athlets.",
-        complete_description:
-          "The Beats Fit Pro earbuds offer up to 6 hours of listening time with Active Noise Cancellation and Transparency enabled, or up to 7 hours with them off, as tested by Apple. Battery life varies with usage and environment. They are sweat and water-resistant (IPX4), suitable for non-water sports, but the charging case is not water-resistant. The earbuds support Spatial Audio with personalized profiles (requiring an iPhone with TrueDepth camera) and Dolby Atmos (with compatible content and devices). These earbuds integrate seamlessly with both Apple and Android ecosystems. Apple users benefit from iCloud features, Automatic Switching, Audio Sharing, Siri, and Find My Beats integration, requiring compatible macOS, iOS, iPadOS, watchOS, and tvOS versions. Android users can utilize the Beats app, which requires Android 9.0 or later, and the ear tip fit test is available on iOS 15.1 or later, or via the Beats app for Android. New Apple Music subscribers can receive three months free when pairing the Beats Fit Pro with an eligible Apple device. Apple's battery life testing involved repeated cycles of full earbud and charging case discharge, highlighting the earbuds' and case's combined battery performance.",
-        stock: 279,
-        categoryId: categories.Earbuds?.id,
-      },
-      {
-        name: "Beats Fit Pro Stone Purple",
-        price: 199.99,
-        img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-fit-pro/pdp/product-carousel/stone-purple/alt/stonepurple-01.jpg.large.2x.jpg",
-        description: "Built for athlets.",
-        complete_description:
-          "The Beats Fit Pro earbuds offer up to 6 hours of listening time with Active Noise Cancellation and Transparency enabled, or up to 7 hours with them off, as tested by Apple. Battery life varies with usage and environment. They are sweat and water-resistant (IPX4), suitable for non-water sports, but the charging case is not water-resistant. The earbuds support Spatial Audio with personalized profiles (requiring an iPhone with TrueDepth camera) and Dolby Atmos (with compatible content and devices). These earbuds integrate seamlessly with both Apple and Android ecosystems. Apple users benefit from iCloud features, Automatic Switching, Audio Sharing, Siri, and Find My Beats integration, requiring compatible macOS, iOS, iPadOS, watchOS, and tvOS versions. Android users can utilize the Beats app, which requires Android 9.0 or later, and the ear tip fit test is available on iOS 15.1 or later, or via the Beats app for Android. New Apple Music subscribers can receive three months free when pairing the Beats Fit Pro with an eligible Apple device. Apple's battery life testing involved repeated cycles of full earbud and charging case discharge, highlighting the earbuds' and case's combined battery performance.",
-        stock: 301,
         categoryId: categories.Earbuds?.id,
       },
       {
