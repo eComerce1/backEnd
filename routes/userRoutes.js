@@ -4,6 +4,8 @@ const userController = require("../controllers/userController");
 const { expressjwt: checkJwt } = require("express-jwt");
 
 //router.post("/", userController.store);
+console.log("User Controller:", userController);
+
 router.post("/create-admin", userController.createAdmin);
 router.delete("/delete-admin/:id", userController.deleteAdmin);
 
