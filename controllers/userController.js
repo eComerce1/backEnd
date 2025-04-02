@@ -1,4 +1,6 @@
 const { Product, User, OrderProduct } = require("../models");
+//const bcrypt = require("bcryptjs");
+
 async function addToCart(req, res) {
   try {
     const userId = req.auth.sub; // Get the logged-in user ID
@@ -44,3 +46,50 @@ async function addToCart(req, res) {
     return res.status(500).json({ error: "Failed to add products to cart" });
   }
 }
+
+async function createAdmin(req, res) {
+  try {
+    const { firstname, lastname, email, password, phone, address } = req.body;
+
+    //const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = await User.create({
+      firstname,
+      lastname,
+      email,
+      password, //hashedPassword,
+      phone,
+      address,
+      role: "admin",
+    });
+    return res.status(201).json({
+      msg: "Administrator created successfully",
+      admin: newAdmin,
+    });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+}
+
+async function deleteAdmin(req, res) {
+  try {
+    const { id } = req.params;
+
+    const admin = await User.findByPk(id);
+
+    if (!admin || admin.role !== "admin") {
+      return res.status(404).json({ msg: "Admin not found or not an admin" });
+    }
+
+    await admin.destroy();
+
+    return res.status(200).json({ msg: "Admin deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+}
+
+module.exports = {
+  createAdmin,
+  deleteAdmin,
+  addToCart,
+};
