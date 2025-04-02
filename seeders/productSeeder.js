@@ -240,6 +240,16 @@ module.exports = async () => {
         categoryId: categories.Earbuds?.id,
       },
       {
+        name: "Beats Studio Buds + Black",
+        price: 169.99,
+        img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/studio-buds-plus/pdp/product-carousel/black/alt/studiobudsplus-blackgold-01.jpg.large.2x.jpg",
+        description: "Built for athlets.",
+        complete_description:
+          "The Beats Studio Buds + offer improved battery life compared to the first-generation model, with Apple's testing showing extended playback time under controlled conditions. They support Dolby Atmos (with compatible content and devices) and feature IPX4 sweat and water resistance, suitable for non-water sports and exercise. Battery life varies with usage and environment, and the charging case is not water-resistant. These earbuds are designed for seamless integration with both Apple and Android devices. Apple users benefit from iCloud features, Siri compatibility, and Find My Beats integration, while Android users can utilize Google Fast Pair, Audio Switch, and Find My Device. Both platforms require compatible operating systems and Google Play Services for Android features. Additionally, new Apple Music subscribers can get three months free when pairing the Beats Studio Buds + with an eligible Apple device. The earbuds also offer fast charging, providing a significant amount of playback time from just a 5-minute charge. Apple emphasizes the sustainability of the product's packaging, excluding adhesives, inks, and coatings from their plastic content and weight calculations.",
+        stock: 196,
+        categoryId: categories.Earbuds?.id,
+      },
+      {
         name: "Beats Flex Flame Blue",
         price: 69.99,
         img: "https://www.beatsbydre.com/content/dam/beats/web/product/earbuds/beats-flex/pdp/product-carousel/flame-blue/pc-beats-flex-flame-blue-earbuds.jpg.large.2x.jpg",
