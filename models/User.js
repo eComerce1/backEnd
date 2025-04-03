@@ -5,7 +5,7 @@ class User extends Model {
     User.init(
       {
         id: {
-          type: DataTypes.BIGINT(20),
+          type: DataTypes.BIGINT,
           primaryKey: true,
           autoIncrement: true,
         },
@@ -15,6 +15,7 @@ class User extends Model {
         password: { type: DataTypes.STRING, allowNull: false },
         phone: { type: DataTypes.STRING, allowNull: false },
         address: { type: DataTypes.STRING, allowNull: false },
+        username: { type: DataTypes.STRING, allowNull: false, unique: true }, // Nuevo campo
       },
       { sequelize, modelName: "user" }
     );
