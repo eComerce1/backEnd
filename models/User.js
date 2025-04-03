@@ -15,11 +15,7 @@ class User extends Model {
         password: { type: DataTypes.STRING, allowNull: false },
         phone: { type: DataTypes.STRING, allowNull: false },
         address: { type: DataTypes.STRING, allowNull: false },
-        role: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          defaultValue: "user", // Si no se especifica el rol, se asigna "user" por defecto
-        },
+        username: { type: DataTypes.STRING, allowNull: false, unique: true },
       },
       { sequelize, modelName: "user" }
     );
