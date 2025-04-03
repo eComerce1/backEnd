@@ -9,7 +9,7 @@ const authController = require("../controllers/authController");
  * tal como se definió en el archivo `routes/index.js`.
  */
 
-router.post("/tokens", authController.getToken);
-router.post("/users", authController.registerUser);
+router.post("/login", authController.login);
+router.post("/register", authController.registerUser);
 
 module.exports = router;
