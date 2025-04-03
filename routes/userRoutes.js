@@ -6,6 +6,9 @@ const { expressjwt: checkJwt } = require("express-jwt");
 //router.post("/", userController.store);
 console.log("User Controller:", userController);
 
+router.get("/clients", userController.getClients);
+router.get("/admins", userController.getAdmins);
+
 router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
 
 module.exports = router;
