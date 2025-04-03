@@ -1,9 +1,14 @@
 const express = require("express");
-const router = express.Router();
-const productController = require("../controllers/productController");
-const { expressjwt: checkJwt } = require("express-jwt");
+const {
+  index,
+  show,
+  getProductsByCategory,
+} = require("../controllers/productController");
 
-router.get("/", productController.index);
-router.get("/:name", productController.show);
+const router = express.Router();
+
+router.get("/", index);
+router.get("/:name", show);
+router.get("/category/:categoryName", getProductsByCategory);
 
 module.exports = router;

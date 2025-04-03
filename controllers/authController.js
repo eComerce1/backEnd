@@ -1,129 +1,141 @@
-const { createClient } = require("@supabase/supabase-js");
-const formidable = require("formidable");
-const path = require("path");
-const fs = require("fs");
+const { User, Admin } = require("../models");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+async function login(req, res) {
+  try {
+    const { identifier, password } = req.body;
 
-async function getToken(req, res) {
-  const { identifier, password } = req.body;
-  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const field = isEmail.test(identifier) ? "email" : "username";
+    if (!identifier || !password) {
+      return res
+        .status(400)
+        .json({ msg: "Email/Username and password are required" });
+    }
 
-  // Search for the user in the database by email or username
-  const { data: user, error } = await supabase
-    .from("users")
-    .select("id, username, firstname, lastname, profilePic, password")
-    .eq(field, identifier)
-    .single();
+    // Buscar en la tabla User por email o username
+    let user =
+      (await User.findOne({ where: { email: identifier } })) ||
+      (await User.findOne({ where: { username: identifier } }));
+    if (!user) {
+      // Si no se encuentra en User, buscar en la tabla Admin
+      user =
+        (await Admin.findOne({ where: { email: identifier } })) ||
+        (await Admin.findOne({ where: { username: identifier } }));
+      if (!user) {
+        return res.status(400).json({
+          msg: "Oops, looks like that combination is not quite right!",
+        });
+      }
+    }
 
-  if (error || !user) {
-    return res.status(400).json({ msg: "Incorrect credentials." });
+    // Comparar la contraseña
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ msg: "Oops, looks like that combination is not quite right!" });
+    }
+
+    // Generar el JWT token
+    const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h", // Establece un tiempo de expiración para el token
+    });
+
+    // Devolver los datos del usuario y su rol (user o admin)
+    return res.status(200).json({
+      msg: "Login successful",
+      token: token,
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        role: user instanceof Admin ? "admin" : "user", // Determinar el rol
+      },
+    });
+  } catch (error) {
+    console.log("Error in login:", error);
+    return res.status(500).json({ msg: error.message });
   }
-
-  // Compare password (ideally use bcrypt for this)
-  if (user.password !== password) {
-    return res.status(400).json({ msg: "Incorrect credentials." });
-  }
-
-  // Generate JWT token
-  const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
-
-  return res.json({
-    id: user.id,
-    username: user.username,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    profilePic: user.profilePic,
-    token,
-  });
 }
 
 async function registerUser(req, res) {
   try {
-    const form = formidable({ multiples: false, keepExtensions: true });
+    const { firstname, lastname, username, email, password, phone, address } =
+      req.body;
 
-    form.parse(req, async (err, fields, files) => {
-      if (err) {
-        return res.status(400).json({ message: "Error processing the form" });
-      }
+    // Check if all required fields are provided
+    if (
+      !firstname ||
+      !lastname ||
+      !username ||
+      !email ||
+      !password ||
+      !phone ||
+      !address
+    ) {
+      return res.status(400).json({ msg: "All fields are required" });
+    }
 
-      const { firstname, lastname, username, email, password, bio } = fields;
+    // Check if the email or username already exists in the database
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ msg: "Email is already registered." });
+    }
 
-      // Check if the user already exists by email or username
-      const { data: existingUsers } = await supabase
-        .from("users")
-        .select("id")
-        .or(`email.eq.${email},username.eq.${username}`);
+    const existingUsername = await User.findOne({ where: { username } });
+    if (existingUsername) {
+      return res.status(400).json({ msg: "Username is already taken." });
+    }
 
-      if (existingUsers.length > 0) {
-        return res
-          .status(400)
-          .json({ message: "Email or username is already in use" });
-      }
+    // Hash the password using bcryptjs
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Upload profile picture if it exists
-      let profilePicUrl = null;
-      if (files.profilePic) {
-        const ext = path.extname(files.profilePic.originalFilename);
-        const newFileName = `image_${Date.now()}${ext}`;
+    // Create the new user
+    const newUser = await User.create({
+      firstname,
+      lastname,
+      username,
+      email,
+      password: hashedPassword, // Store the hashed password
+      phone,
+      address,
+    });
 
-        // Upload the image to Supabase Storage
-        const { error: uploadError } = await supabase.storage
-          .from(process.env.SUPABASE_BUCKET)
-          .upload(newFileName, fs.createReadStream(files.profilePic.filepath), {
-            cacheControl: "3600",
-            upsert: false,
-            contentType: files.profilePic.mimetype,
-          });
-
-        if (uploadError) {
-          return res
-            .status(500)
-            .json({
-              message: "Error uploading the image",
-              error: uploadError.message,
-            });
-        }
-
-        // Get the public URL for the uploaded profile picture
-        profilePicUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/${process.env.SUPABASE_BUCKET}/${newFileName}`;
-      }
-
-      // Insert the new user into the database
-      const { error: insertError } = await supabase.from("users").insert([
-        {
-          firstname,
-          lastname,
-          username,
-          email,
-          password, // Ideally, use bcrypt for password encryption
-          bio,
-          profilePic: profilePicUrl,
-        },
-      ]);
-
-      if (insertError) {
-        return res
-          .status(500)
-          .json({
-            message: "Error registering user",
-            error: insertError.message,
-          });
-      }
-
-      res.status(201).json({ message: "User registered successfully" });
+    return res.status(201).json({
+      msg: "User created successfully",
+      user: newUser,
     });
   } catch (error) {
-    console.error("Error in registerUser:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error in createUser:", error);
+    return res.status(500).json({ msg: error.message });
   }
 }
 
-module.exports = { getToken, registerUser };
+async function deleteUser(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Find the user by ID
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Delete the user
+    await user.destroy();
+
+    return res.status(200).json({ msg: "User deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+}
+
+console.log("createUser function:", typeof createUser);
+
+module.exports = {
+  login,
+  registerUser,
+  deleteUser,
+};
