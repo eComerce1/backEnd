@@ -49,11 +49,11 @@ async function addToCart(req, res) {
 
 async function index(req, res) {
   try {
-    const clients = await User.findAll();
-    if (clients.length === 0) {
+    const users = await User.findAll();
+    if (users.length === 0) {
       return res.status(404).json({ msg: "No se encontraron usuarios." });
     }
-    return res.json({ clients });
+    return res.json({ users });
   } catch (error) {
     return res.status(500).json({ msg: error.message });
   }
