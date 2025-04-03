@@ -44,7 +44,20 @@ async function deleteAdmin(req, res) {
 }
 console.log("createAdmin function:", typeof createAdmin);
 
+async function index(req, res) {
+  try {
+    const admins = await Admin.findAll();
+    if (admins.length === 0) {
+      return res.status(404).json({ msg: "No se encontraron clientes." });
+    }
+    return res.json({ admins });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+}
+
 module.exports = {
   createAdmin,
   deleteAdmin,
+  index,
 };
