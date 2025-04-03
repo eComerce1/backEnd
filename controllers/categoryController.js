@@ -12,7 +12,7 @@ async function index(req, res) {
 async function show(req, res) {
   try {
     const { name } = req.params;
-    const product = await Product.findOne({ where: { name: name } });
+    const product = await Product.findOne({ where: { name } });
 
     if (!product) {
       return res.status(404).json({ msg: "Product not found" });
@@ -27,9 +27,9 @@ async function show(req, res) {
 async function getProductsByCategory(req, res) {
   try {
     const { categoryName } = req.params;
-    const category = await Category.findOne({
-      where: { name: categoryName },
-    });
+
+    // Buscar la categoría
+    const category = await Category.findOne({ where: { name: categoryName } });
 
     if (!category) {
       return res.status(404).json({ msg: "Category not found" });
@@ -39,21 +39,14 @@ async function getProductsByCategory(req, res) {
       where: { categoryId: category.id },
     });
 
-    if (products.length === 0) {
-      return res
-        .status(404)
-        .json({ msg: "No products found for this category" });
-    }
-
     return res.json({ products });
   } catch (error) {
-    console.error("Error fetching products:", error.message);
-    return res.status(500).json({ msg: "Internal Server Error" });
+    return res.status(500).json({ msg: error.message });
   }
 }
 
 module.exports = {
   index,
   show,
-  getProductsByCategory,
+  getProductsByCategory, // Agregamos la nueva función
 };
