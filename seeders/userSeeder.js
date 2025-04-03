@@ -19,7 +19,6 @@ module.exports = async () => {
         phone: faker.phone.number(),
         address: faker.location.streetAddress(),
         username: faker.internet.username(),
-        role: faker.helpers.arrayElement(["user", "admin"]),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
