@@ -47,11 +47,11 @@ async function addToCart(req, res) {
   }
 }
 
-async function getClients(req, res) {
+async function index(req, res) {
   try {
-    const clients = await User.findAll({ where: { role: "user" } });
+    const clients = await User.findAll();
     if (clients.length === 0) {
-      return res.status(404).json({ msg: "No se encontraron clientes." });
+      return res.status(404).json({ msg: "No se encontraron usuarios." });
     }
     return res.json({ clients });
   } catch (error) {
@@ -61,5 +61,5 @@ async function getClients(req, res) {
 
 module.exports = {
   addToCart,
-  getClients,
+  index,
 };
