@@ -22,7 +22,7 @@ module.exports = async () => {
       },
       {
         orderId: order.id,
-        productId: 2,
+        productId: product.id,
         amount: 1,
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -26,6 +26,7 @@ Order.belongsTo(User);
 // We use belongsToMany instead of hasMany because an order can have multiple products,
 Order.belongsToMany(Product, { through: OrderProduct });
 Product.belongsToMany(Order, { through: OrderProduct });
+OrderProduct.associate({ Order, Product });
 // and each product can belong to multiple orders. To properly represent this many-to-many
 // relationship and store additional information (like quantity), we use an intermediate
 // table (OrderProduct). This allows us to track how many units of each product are
@@ -40,4 +41,5 @@ module.exports = {
   Order,
   Category,
   Admin,
+  OrderProduct,
 };

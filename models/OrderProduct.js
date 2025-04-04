@@ -10,8 +10,13 @@ class OrderProduct extends Model {
           defaultValue: 1,
         },
       },
-      { sequelize, modelName: "orderProduct" }
+      { sequelize, modelName: "OrderProduct" }
     );
+
+    OrderProduct.associate = (models) => {
+      OrderProduct.belongsTo(models.Order, { foreignKey: "orderId" });
+      OrderProduct.belongsTo(models.Product, { foreignKey: "productId" });
+    };
   }
 }
 
