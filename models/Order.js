@@ -18,7 +18,7 @@ class Order extends Model {
           defaultValue: "cart",
         },
       },
-      { sequelize, modelName: "order" }
+      { sequelize, modelName: "order", timestamps: true }
     );
   }
 }
