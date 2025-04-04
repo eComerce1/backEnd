@@ -1,15 +1,26 @@
-const { Op } = require("sequelize");
 const Order = require("../models/Order");
+const { Op } = require("sequelize");
+
+const getCart = async (req, res) => {};
+
+const addToCart = async (req, res) => {};
+
+const removeFromCart = async (req, res) => {};
+
+const clearCart = async (req, res) => {};
+
+const updateOrderStatus = async (req, res) => {};
 
 const getLastMonthOrders = async (req, res) => {
   try {
     const lastMonth = new Date();
     lastMonth.setMonth(lastMonth.getMonth() - 1);
+    lastMonth.setHours(0, 0, 0, 0);
 
     const orders = await Order.findAll({
       where: {
         createdAt: {
-          [Op.gte]: lastMonth, // Filtra órdenes creadas desde el último mes
+          [Op.gte]: lastMonth,
         },
       },
       order: [["createdAt", "DESC"]],
@@ -29,4 +40,11 @@ const getLastMonthOrders = async (req, res) => {
   }
 };
 
-module.exports = { getLastMonthOrders };
+module.exports = {
+  addToCart,
+  getCart,
+  removeFromCart,
+  clearCart,
+  updateOrderStatus,
+  getLastMonthOrders,
+};
