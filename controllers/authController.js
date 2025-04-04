@@ -1,4 +1,4 @@
-const { User, Admin } = require("../models");
+const { User, Admin, Order, Product } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -7,20 +7,14 @@ async function login(req, res) {
     const { identifier, password } = req.body;
 
     if (!identifier || !password) {
-      return res
-        .status(400)
-        .json({ msg: "Email/Username and password are required" });
+      return res.status(400).json({ msg: "Email and password are required" });
     }
 
-    // Buscar en la tabla User por email o username
-    let user =
-      (await User.findOne({ where: { email: identifier } })) ||
-      (await User.findOne({ where: { username: identifier } }));
+    // Search for the user in the User table by email or username
+    let user = await User.findOne({ where: { email: identifier } });
     if (!user) {
-      // Si no se encuentra en User, buscar en la tabla Admin
-      user =
-        (await Admin.findOne({ where: { email: identifier } })) ||
-        (await Admin.findOne({ where: { username: identifier } }));
+      // If not found in User, search in the Admin table
+      user = await Admin.findOne({ where: { email: identifier } });
       if (!user) {
         return res.status(400).json({
           msg: "Oops, looks like that combination is not quite right!",
@@ -28,7 +22,7 @@ async function login(req, res) {
       }
     }
 
-    // Comparar la contraseña
+    // Compare the password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res
@@ -36,12 +30,31 @@ async function login(req, res) {
         .json({ msg: "Oops, looks like that combination is not quite right!" });
     }
 
-    // Generar el JWT token
+    // Generate the JWT token
     const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h", // Establece un tiempo de expiración para el token
+      expiresIn: "1h", // Token expiration time
     });
 
-    // Devolver los datos del usuario y su rol (user o admin)
+    // Fetch the user's active cart
+    const cart = await Order.findOne({
+      where: { userId: user.id, status: "cart" },
+      include: [{ model: Product, through: { attributes: ["amount"] } }],
+    });
+
+    // Construct the cart response
+    const cartData = cart
+      ? {
+          id: cart.id,
+          products: cart.products.map((product) => ({
+            productId: product.id,
+            name: product.name,
+            price: product.price,
+            amount: product.orderProduct.amount, // Fetch amount from pivot table
+          })),
+        }
+      : null;
+
+    // Return user data, role, and cart
     return res.status(200).json({
       msg: "Login successful",
       token: token,
@@ -50,8 +63,9 @@ async function login(req, res) {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
-        role: user instanceof Admin ? "admin" : "user", // Determinar el rol
+        role: user instanceof Admin ? "admin" : "user",
       },
+      cart: cartData,
     });
   } catch (error) {
     console.log("Error in login:", error);
