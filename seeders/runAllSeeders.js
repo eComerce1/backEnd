@@ -28,7 +28,6 @@ async function runAllSeeders() {
     await require("./productSeeder")();
     await require("./userSeeder")();
     await require("./orderSeeder")();
-    await require("./orderProductSeeder")();
     console.log("[Database] ¡Los datos de prueba fueron insertados!");
 
     process.exit();

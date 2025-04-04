@@ -42,5 +42,4 @@ module.exports = {
   OrderProduct,
   Category,
   Admin,
-  OrderProduct,
 };

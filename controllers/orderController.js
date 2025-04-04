@@ -1,4 +1,4 @@
-const { Order, OrderProduct } = require("../models");
+const { Order, OrderProduct, User, Product } = require("../models");
 const { Op } = require("sequelize");
 
 const updateOrderStatus = async (req, res) => {
@@ -160,40 +160,79 @@ const clearCart = async (req, res) => {
   }
 };
 
-const getLastMonthOrders = async (req, res) => {
+const getOrdersLastMonth = async (req, res) => {
   try {
+    const today = new Date();
     const lastMonth = new Date();
-    lastMonth.setMonth(lastMonth.getMonth() - 1);
-    lastMonth.setHours(0, 0, 0, 0);
+    lastMonth.setMonth(today.getMonth() - 1);
 
     const orders = await Order.findAll({
       where: {
         createdAt: {
-          [Op.gte]: lastMonth,
+          [Op.between]: [lastMonth, today],
         },
       },
+      include: [
+        { model: User, attributes: ["email"] },
+        {
+          model: Product,
+          attributes: ["id", "name", "price"],
+          through: { attributes: ["amount"] }, // Trae la cantidad
+        },
+      ],
       order: [["createdAt", "DESC"]],
     });
 
     const formattedOrders = orders.map((order) => ({
       ...order.toJSON(),
-      formattedDate: new Intl.DateTimeFormat("en-US", {
+      createdAt: new Date(order.createdAt).toLocaleDateString("en-US", {
         month: "long",
         day: "2-digit",
-      }).format(new Date(order.createdAt)),
+      }),
     }));
 
-    res.json(formattedOrders);
+    res.status(200).json({ orders: formattedOrders });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching orders", error });
+    console.log("Error fetching last month orders:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
+const getLastTenOrders = async (req, res) => {
+  try {
+    const orders = await Order.findAll({
+      include: [
+        { model: User, attributes: ["email"] },
+        {
+          model: Product,
+          attributes: ["id", "name", "price"],
+          through: { attributes: ["amount"] },
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+      limit: 10,
+    });
+
+    const formattedOrders = orders.map((order) => ({
+      ...order.toJSON(),
+      createdAt: new Date(order.createdAt).toLocaleDateString("en-US", {
+        month: "long",
+        day: "2-digit",
+      }),
+    }));
+
+    res.status(200).json({ orders: formattedOrders });
+  } catch (error) {
+    console.log("Error fetching last 10 orders:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 module.exports = {
   addToCart,
   getCart,
   removeFromCart,
   clearCart,
   updateOrderStatus,
-  getLastMonthOrders,
+  getOrdersLastMonth,
+  getLastTenOrders,
 };
