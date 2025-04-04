@@ -8,7 +8,7 @@ module.exports = async () => {
     const users = [];
 
     for (let i = 0; i <= 10; i++) {
-      const password = faker.internet.password();
+      const password = "1234";
       const hashedPassword = await bcrypt.hash(password, 10);
 
       users.push({
