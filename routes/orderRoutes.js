@@ -6,13 +6,13 @@ const {
   clearCart,
   updateOrderStatus,
 } = require("../controllers/orderController");
+const { expressjwt: checkJwt } = require("express-jwt");
 
 const router = express.Router();
-
-router.get("/orders/cart", getCart);
-router.post("/orders/cart", addToCart);
-router.delete("/orders/cart/:productId", removeFromCart);
-router.delete("/orders/cart/clear", clearCart);
-router.put("/:orderId/status", updateOrderStatus);
+router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
+router.get("/cart", getCart);
+router.post("/cart", addToCart);
+router.delete("/cart/:productId", removeFromCart);
+router.delete("/clear", clearCart);
 
 module.exports = router;

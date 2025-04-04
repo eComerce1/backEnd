@@ -32,7 +32,7 @@ async function login(req, res) {
 
     // Generate the JWT token
     const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h", // Token expiration time
+      expiresIn: "10h", // Token expiration time
     });
 
     // Fetch the user's active cart
