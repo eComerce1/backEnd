@@ -1,7 +1,16 @@
 const express = require("express");
-const router = express.Router();
-const { updateOrderStatus } = require("../controllers/orderController");
+const {
+  addToCart,
+  getCart,
+  removeFromCart,
+  clearCart,
+} = require("../controllers/orderController");
 
-router.put("/:orderId/status", updateOrderStatus);
+const router = express.Router();
+
+router.get("/orders/cart", getCart);
+router.post("/orders/cart", addToCart);
+router.delete("/orders/cart/:productId", removeFromCart);
+router.delete("/orders/cart/clear", clearCart);
 
 module.exports = router;
