@@ -1,43 +1,58 @@
-const { Order } = require("../models");
-
-const orders = [
-  {
-    user_id: 1,
-    product_id: 2,
-    quantity: 3,
-    total_price: 150,
-    status: "completed",
-    order_date: new Date(),
-    address: "123 Main St, Springfield",
-    phone: "1234567890",
-    paymentMethod: "credit card",
-  },
-  {
-    user_id: 2,
-    product_id: 1,
-    quantity: 1,
-    total_price: 50,
-    status: "pending",
-    order_date: new Date(),
-    address: "456 Oak St, Springfield",
-    phone: "9876543210",
-    paymentMethod: "paypal",
-  },
-  {
-    user_id: 3,
-    product_id: 5,
-    quantity: 2,
-    total_price: 100,
-    status: "cart",
-    order_date: new Date(),
-    address: "789 Pine St, Springfield",
-    phone: "5555555555",
-    paymentMethod: "debit card",
-  },
-];
+const { Order, User, Product, OrderProduct } = require("../models");
 
 async function seedOrders() {
-  await Order.bulkCreate(orders);
+  // Borrar todas las órdenes y productos asociados
+  await OrderProduct.destroy({ where: {} });
+  await Order.destroy({ where: {} });
+
+  const users = await User.findAll();
+  const products = await Product.findAll();
+
+  const ordersData = [
+    {
+      user: users[0],
+      products: [{ product: products[1], amount: 3 }],
+      status: "completed",
+      address: users[0].address,
+      phone: users[0].phone,
+      paymentMethod: "credit card",
+    },
+    {
+      user: users[1],
+      products: [{ product: products[0], amount: 1 }],
+      status: "pending",
+      address: users[1].address,
+      phone: users[1].phone,
+      paymentMethod: "paypal",
+    },
+    {
+      user: users[2],
+      products: [{ product: products[4], amount: 2 }],
+      status: "cart",
+      address: users[2].address,
+      phone: users[2].phone,
+      paymentMethod: "debit card",
+    },
+  ];
+
+  for (const orderData of ordersData) {
+    const { user, products, ...orderInfo } = orderData;
+
+    const order = await Order.create({
+      ...orderInfo,
+      userId: user.id,
+    });
+
+    for (const { product, amount } of products) {
+      await OrderProduct.create({
+        orderId: order.id,
+        productId: product.id,
+        amount,
+      });
+    }
+  }
+
+  console.log("Seed de órdenes completado.");
 }
 
 module.exports = seedOrders;
