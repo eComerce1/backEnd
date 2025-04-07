@@ -1,5 +1,5 @@
 const { Admin } = require("../models");
-
+const bcrypt = require("bcryptjs");
 async function createAdmin(req, res) {
   try {
     const { firstname, lastname, email, password } = req.body;
@@ -8,12 +8,12 @@ async function createAdmin(req, res) {
       return res.status(400).json({ msg: "All fields are required" });
     }
 
-    //const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newAdmin = await Admin.create({
       firstname,
       lastname,
       email,
-      password, //hashedPassword,
+      password: hashedPassword,
     });
     return res.status(201).json({
       msg: "Administrator created successfully",

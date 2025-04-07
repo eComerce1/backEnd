@@ -33,60 +33,62 @@ async function login(req, res) {
     const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
       expiresIn: "10h", // Token expiration time
     });
-
-    // Fetch the user's active cart
-    var order = await Order.findOne({
-      where: { userId: user.id, status: "cart" },
-    });
-    var orderProducts = [];
-    // If there's a cart provided in the body, add or update the products
-    if (cart && Array.isArray(cart) && cart.length !== 0) {
-      if (!order) {
-        // If no cart exists, create a new order
-        order = await Order.create({
-          address: user.address,
-          phone: user.phone,
-          paymentMethod: "pending",
-          userId: user.id,
-          status: "cart",
-        });
-      }
-      for (const cartItem of cart) {
-        const { id, amount } = cartItem;
-        // Check if the product is already in the cart
-        const existingProduct = await OrderProduct.findOne({
-          where: { orderId: order.id, productId: id },
-        });
-
-        if (existingProduct) {
-          // Update the quantity if product is already in the cart
-          existingProduct.amount += amount;
-          await existingProduct.save();
-        } else {
-          // Add the new product to the cart
-          await OrderProduct.create({
-            orderId: order.id,
-            productId: id,
-            amount,
+    var cartData = null;
+    if (!user instanceof Admin) {
+      // Fetch the user's active cart
+      var order = await Order.findOne({
+        where: { userId: user.id, status: "cart" },
+      });
+      var orderProducts = [];
+      // If there's a cart provided in the body, add or update the products
+      if (cart && Array.isArray(cart) && cart.length !== 0) {
+        if (!order) {
+          // If no cart exists, create a new order
+          order = await Order.create({
+            address: user.address,
+            phone: user.phone,
+            paymentMethod: "pending",
+            userId: user.id,
+            status: "cart",
           });
         }
-      }
-    }
-    // Fetch the updated order with its products
-    orderProducts = await OrderProduct.findAll({
-      where: { orderId: order.id },
-      include: [{ model: Product, required: true }],
-    });
-    const cartData =
-      orderProducts.length > 0
-        ? {
-            id: order.id,
-            products: orderProducts.map((orderProduct) => ({
-              product: orderProduct.product,
-              amount: orderProduct.amount,
-            })),
+        for (const cartItem of cart) {
+          const { id, amount } = cartItem;
+          // Check if the product is already in the cart
+          const existingProduct = await OrderProduct.findOne({
+            where: { orderId: order.id, productId: id },
+          });
+
+          if (existingProduct) {
+            // Update the quantity if product is already in the cart
+            existingProduct.amount += amount;
+            await existingProduct.save();
+          } else {
+            // Add the new product to the cart
+            await OrderProduct.create({
+              orderId: order.id,
+              productId: id,
+              amount,
+            });
           }
-        : null;
+        }
+      }
+      // Fetch the updated order with its products
+      orderProducts = await OrderProduct.findAll({
+        where: { orderId: order.id },
+        include: [{ model: Product, required: true }],
+      });
+      cartData =
+        orderProducts.length > 0
+          ? {
+              id: order.id,
+              products: orderProducts.map((orderProduct) => ({
+                product: orderProduct.product,
+                amount: orderProduct.amount,
+              })),
+            }
+          : null;
+    }
 
     // Return user data, role, and cart
     return res.status(200).json({
