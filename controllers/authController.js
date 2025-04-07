@@ -34,7 +34,7 @@ async function login(req, res) {
       expiresIn: "10h", // Token expiration time
     });
     var cartData = null;
-    if (!user instanceof Admin) {
+    if (user) {
       // Fetch the user's active cart
       var order = await Order.findOne({
         where: { userId: user.id, status: "cart" },
