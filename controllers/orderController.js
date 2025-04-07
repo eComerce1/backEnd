@@ -57,7 +57,7 @@ const addToCart = async (req, res) => {
 
       if (existingItem) {
         // If the product exists in the cart, update the quantity
-        if (existingItem.amount <= existingItem.stock) {
+        if (amount <= existingItem.stock) {
           existingItem.amount = amount;
         } else {
           existingItem.amount = existingItem.stock;
@@ -232,7 +232,6 @@ const getLastTenOrders = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 const getUserOrders = async (req, res) => {
   try {
     const { id } = req.params;
@@ -256,7 +255,6 @@ const getUserOrders = async (req, res) => {
     return res.status(500).json({ msg: error.message });
   }
 };
-
 module.exports = {
   addToCart,
   getCart,
