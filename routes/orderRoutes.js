@@ -7,6 +7,7 @@ const {
   updateOrderStatus,
   getLastTenOrders,
   getOrdersLastMonth,
+  getUserOrders,
 } = require("../controllers/orderController");
 
 const { expressjwt: checkJwt } = require("express-jwt");
@@ -19,6 +20,7 @@ router.get("/cart", getCart);
 router.post("/cart", addToCart);
 router.delete("/cart/:productId", removeFromCart);
 router.delete("/clear", clearCart);
+router.get("/user/:id", getUserOrders);
 
 router.put("/:orderId/status", updateOrderStatus);
 

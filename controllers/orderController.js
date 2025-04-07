@@ -227,6 +227,31 @@ const getLastTenOrders = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const getUserOrders = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const orders = await Order.findAll({
+      where: {
+        userId: id,
+      },
+      include: {
+        model: Product,
+        attributes: ["id", "name", "price"],
+        through: { attributes: ["amount"] },
+      },
+    });
+
+    if (!orders) {
+      return res.status(404).json({ message: "Orders not found" });
+    } else {
+      return res.json({ orders });
+    }
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+};
+
 module.exports = {
   addToCart,
   getCart,
@@ -235,4 +260,5 @@ module.exports = {
   updateOrderStatus,
   getOrdersLastMonth,
   getLastTenOrders,
+  getUserOrders,
 };
