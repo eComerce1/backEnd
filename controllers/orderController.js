@@ -57,7 +57,12 @@ const addToCart = async (req, res) => {
 
       if (existingItem) {
         // If the product exists in the cart, update the quantity
-        existingItem.amount += amount;
+        if (existingItem.amount <= existingItem.stock) {
+          existingItem.amount = amount;
+        } else {
+          existingItem.amount = existingItem.stock;
+        }
+
         await existingItem.save();
       } else {
         // If not, add it to the cart

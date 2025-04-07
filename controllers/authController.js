@@ -1,4 +1,4 @@
-const { User, Admin, Order, Product } = require("../models");
+const { User, Admin, Order, Product, OrderProduct } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -35,23 +35,32 @@ async function login(req, res) {
     });
 
     // Fetch the user's active cart
-    const cart = await Order.findOne({
+    const order = await Order.findOne({
       where: { userId: user.id, status: "cart" },
-      include: [{ model: Product, through: { attributes: ["amount"] } }],
     });
-
-    // Construct the cart response
-    const cartData = cart
-      ? {
-          id: cart.id,
-          products: cart.products.map((product) => ({
-            productId: product.id,
-            name: product.name,
-            price: product.price,
-            amount: product.orderProduct.amount, // Fetch amount from pivot table
-          })),
-        }
-      : null;
+    var cartData = null;
+    if (order) {
+      const orderProducts = await OrderProduct.findAll({
+        where: { orderId: order.id },
+        include: [
+          {
+            model: Product,
+            required: true,
+          },
+        ],
+      });
+      // Construct the cart response
+      var cartData =
+        orderProducts.length > 0
+          ? {
+              id: order.id,
+              products: orderProducts.map((orderProduct) => ({
+                product: orderProduct.product,
+                amount: orderProduct.amount,
+              })),
+            }
+          : null;
+    }
 
     // Return user data, role, and cart
     return res.status(200).json({
