@@ -278,7 +278,7 @@ const getLastTenOrders = async (req, res) => {
 };
 const getUserOrders = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.auth.sub;
     const orders = await Order.findAll({
       where: {
         userId: id,

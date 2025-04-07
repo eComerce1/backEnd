@@ -27,6 +27,6 @@ router.post("/cart", addToCart);
 router.delete("/cart/:productId", removeFromCart);
 router.post("/update-address", updateOrderAddress);
 router.delete("/clear", clearCart);
-router.get("/user/:id", getUserOrders);
+router.get("/orders", getUserOrders);
 
 module.exports = router;
