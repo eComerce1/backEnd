@@ -38,9 +38,9 @@ async function login(req, res) {
     var order = await Order.findOne({
       where: { userId: user.id, status: "cart" },
     });
-
+    var orderProducts = [];
     // If there's a cart provided in the body, add or update the products
-    if (cart && Array.isArray(cart)) {
+    if (cart && Array.isArray(cart) && cart.length !== 0) {
       if (!order) {
         // If no cart exists, create a new order
         order = await Order.create({
@@ -52,8 +52,7 @@ async function login(req, res) {
         });
       }
       for (const cartItem of cart) {
-        const { product, amount } = cartItem;
-        const id = product.id;
+        const { id, amount } = cartItem;
         // Check if the product is already in the cart
         const existingProduct = await OrderProduct.findOne({
           where: { orderId: order.id, productId: id },
@@ -73,13 +72,11 @@ async function login(req, res) {
         }
       }
     }
-
     // Fetch the updated order with its products
-    const orderProducts = await OrderProduct.findAll({
+    orderProducts = await OrderProduct.findAll({
       where: { orderId: order.id },
       include: [{ model: Product, required: true }],
     });
-
     const cartData =
       orderProducts.length > 0
         ? {
@@ -100,6 +97,7 @@ async function login(req, res) {
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
+        address: user.address,
         role: user instanceof Admin ? "admin" : "user",
       },
       cart: cartData,

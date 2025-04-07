@@ -5,6 +5,7 @@ const {
   removeFromCart,
   clearCart,
   updateOrderStatus,
+  updateOrderAddress,
   getLastTenOrders,
   getOrdersLastMonth,
   getUserOrders,
@@ -24,6 +25,7 @@ router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
 router.get("/cart", getCart);
 router.post("/cart", addToCart);
 router.delete("/cart/:productId", removeFromCart);
+router.post("/update-address", updateOrderAddress);
 router.delete("/clear", clearCart);
 router.get("/user/:id", getUserOrders);
 

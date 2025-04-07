@@ -72,31 +72,55 @@ const addToCart = async (req, res) => {
 
     res.status(200).json({ message: "Products added to cart." });
   } catch (err) {
-    console.error("Error adding to cart:", err);
+    console.log("Error adding to cart:", err);
     res.status(500).json({ error: "Internal server error." });
   }
 };
 
 const getCart = async (req, res) => {
-  const userId = req.auth.sub; // Get the logged-in user
+  const userId = req.auth.sub;
 
   try {
-    // Find the active cart (order with status 'cart') for the user
     const cart = await Order.findOne({
       where: { userId, status: "cart" },
       include: [
         {
           model: Product,
-          through: { attributes: ["amount"] }, // Include quantity from OrderProduct
+          through: { attributes: ["amount", "orderId", "productId"] },
         },
       ],
     });
 
     if (!cart) {
-      return res.status(200).json({ message: "Cart is empty", cart: [] });
+      return res.status(200).json({ message: "Cart is empty", products: [] });
     }
 
-    res.status(200).json(cart);
+    for (let item of cart.products) {
+      const orderProduct = item.OrderProduct;
+      if (orderProduct.amount > item.stock || orderProduct.amount > 6) {
+        orderProduct.amount = Math.min(item.stock, 6);
+
+        await OrderProduct.update(
+          { amount: orderProduct.amount },
+          {
+            where: {
+              orderId: orderProduct.orderId,
+              productId: orderProduct.productId,
+            },
+          }
+        );
+      }
+    }
+
+    // Flatten OrderProduct.amount into each product object
+    const updatedProducts = cart.products.map((product) => {
+      return {
+        ...product.toJSON(),
+        amount: product.OrderProduct.amount,
+      };
+    });
+
+    res.status(200).json({ products: updatedProducts });
   } catch (err) {
     console.error("Error fetching cart:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -164,7 +188,27 @@ const clearCart = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const updateOrderAddress = async (req, res) => {
+  try {
+    const { address } = req.body;
+    console.log(req.auth);
+    const userId = req.auth.sub;
 
+    const order = await Order.findOne({ where: { userId, status: "cart" } });
+
+    if (!order) {
+      return res.status(404).json({ msg: "No active cart found." });
+    }
+
+    order.address = address;
+    await order.save();
+
+    res.status(200).json({ msg: "Address updated", orderId: order.id });
+  } catch (error) {
+    console.log("Error updating address:", error);
+    res.status(500).json({ msg: "Failed to update address", error });
+  }
+};
 const getOrdersLastMonth = async (req, res) => {
   try {
     const today = new Date();
@@ -261,6 +305,7 @@ module.exports = {
   removeFromCart,
   clearCart,
   updateOrderStatus,
+  updateOrderAddress,
   getOrdersLastMonth,
   getLastTenOrders,
   getUserOrders,
