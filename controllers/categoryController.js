@@ -1,52 +1,70 @@
-const { Product, Category } = require("../models");
+const { Category } = require("../models");
 
 async function index(req, res) {
   try {
-    const products = await Product.findAll();
-    return res.json({ products });
+    const categories = await Category.findAll();
+    return res.json({ categories });
   } catch (error) {
     return res.status(500).json({ msg: error.message });
   }
 }
 
-async function show(req, res) {
+async function createCategory(req, res) {
   try {
-    const { name } = req.params;
-    const product = await Product.findOne({ where: { name } });
+    const { name } = req.body;
+    const newCategory = await Category.create({ name });
 
-    if (!product) {
-      return res.status(404).json({ msg: "Product not found" });
-    }
-
-    return res.json({ product });
-  } catch (error) {
-    return res.status(500).json({ msg: error.message });
-  }
-}
-
-async function getProductsByCategory(req, res) {
-  try {
-    const { categoryName } = req.params;
-
-    // Buscar la categoría
-    const category = await Category.findOne({ where: { name: categoryName } });
-
-    if (!category) {
-      return res.status(404).json({ msg: "Category not found" });
-    }
-
-    const products = await Product.findAll({
-      where: { categoryId: category.id },
+    return res.status(201).json({
+      msg: "Category created successfully",
+      category: newCategory,
     });
-
-    return res.json({ products });
   } catch (error) {
+    console.error("Error in createCategory:", error);
     return res.status(500).json({ msg: error.message });
+  }
+}
+
+async function editCategory(req, res) {
+  try {
+    const { id } = req.params;
+    const [updated] = await Category.update(req.body, { where: { id: id } });
+    if (updated) {
+      const updatedCategory = await Category.findOne({ where: { id: id } });
+      return res
+        .status(200)
+        .json({ msg: "Category edited successfully", post: updatedCategory });
+    }
+    return res.status(404).json({ message: "Categoría no encontrada" });
+  } catch (error) {
+    console.error("Error al actualizar la categoría", error);
+    return res.status(500).send(error.message);
+  }
+}
+
+/*   if (parseInt(req.auth.sub) !== parseInt(id)) {
+  return res.status(403).json({ message: "Unauthorized" });
+} */
+async function deleteCategory(req, res) {
+  const { id } = req.params;
+
+  try {
+    const category = await Category.findByPk(id);
+
+    if (!category)
+      return res.status(404).json({ message: "Category not found" });
+
+    await category.destroy();
+
+    return res.status(200).json({ message: "Category deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
 module.exports = {
   index,
-  show,
-  getProductsByCategory, // Agregamos la nueva función
+  createCategory,
+  editCategory,
+  deleteCategory,
 };
