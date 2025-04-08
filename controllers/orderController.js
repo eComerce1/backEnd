@@ -48,25 +48,30 @@ const addToCart = async (req, res) => {
 
     // 2. Iterate over each product in the request
     for (const { productId, amount = 1 } of products) {
-      if (!productId || amount <= 0) continue; // Skip invalid entries
+      if (!productId || amount <= 0) continue;
 
-      // Check if the product is already in the cart
+      // Get the product to check available stock
+      const product = await Product.findByPk(productId);
+      if (!product) continue;
+
+      const availableStock = product.stock;
+
+      // Check if product is already in cart
       const existingItem = await OrderProduct.findOne({
         where: { orderId: cart.id, productId },
       });
 
-      if (existingItem) {
-        // If the product exists in the cart, update the quantity
-        if (amount <= existingItem.stock) {
-          existingItem.amount = amount;
-        } else {
-          existingItem.amount = existingItem.stock;
-        }
+      const adjustedAmount = Math.min(amount, availableStock);
 
+      if (existingItem) {
+        existingItem.amount = adjustedAmount;
         await existingItem.save();
       } else {
-        // If not, add it to the cart
-        await OrderProduct.create({ orderId: cart.id, productId, amount });
+        await OrderProduct.create({
+          orderId: cart.id,
+          productId,
+          amount: adjustedAmount,
+        });
       }
     }
 
@@ -159,7 +164,7 @@ const removeFromCart = async (req, res) => {
 
     res.status(200).json({ message: "Product removed from cart" });
   } catch (err) {
-    console.error("Error removing product from cart:", err);
+    console.log("Error removing product from cart:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };

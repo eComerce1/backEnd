@@ -4,103 +4,134 @@ const jwt = require("jsonwebtoken");
 
 async function login(req, res) {
   try {
-    const { identifier, password, cart } = req.body; // Recibimos el carrito también
+    const { identifier, password, cart } = req.body;
     if (!identifier || !password) {
       return res.status(400).json({ msg: "Email and password are required" });
     }
 
-    // Search for the user in the User table by email or username
-    var user = await User.findOne({ where: { email: identifier } });
+    // Try to find the user in the User table first
+    let user = await User.findOne({ where: { email: identifier } });
+
+    // If not found, try to find in the Admin table
+    let isAdmin = false;
     if (!user) {
-      // If not found in User, search in the Admin table
       user = await Admin.findOne({ where: { email: identifier } });
       if (!user) {
         return res.status(400).json({
           msg: "Oops, looks like that combination is not quite right!",
         });
       }
+      isAdmin = true;
     }
 
-    // Compare the password
+    // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res
-        .status(400)
-        .json({ msg: "Oops, looks like that combination is not quite right!" });
+      return res.status(400).json({
+        msg: "Oops, looks like that combination is not quite right!",
+      });
     }
 
-    // Generate the JWT token
+    // Generate JWT token
     const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "10h", // Token expiration time
+      expiresIn: "10h",
     });
-    var cartData = null;
-    if (user) {
-      // Fetch the user's active cart
-      var order = await Order.findOne({
-        where: { userId: user.id, status: "cart" },
-      });
-      var orderProducts = [];
-      // If there's a cart provided in the body, add or update the products
-      if (cart && Array.isArray(cart) && cart.length !== 0) {
-        if (!order) {
-          // If no cart exists, create a new order
-          order = await Order.create({
-            address: user.address,
-            phone: user.phone,
-            paymentMethod: "pending",
-            userId: user.id,
-            status: "cart",
-          });
-        }
-        for (const cartItem of cart) {
-          const { id, amount } = cartItem;
-          // Check if the product is already in the cart
-          const existingProduct = await OrderProduct.findOne({
-            where: { orderId: order.id, productId: id },
-          });
 
-          if (existingProduct) {
-            // Update the quantity if product is already in the cart
-            existingProduct.amount += amount;
-            await existingProduct.save();
-          } else {
-            // Add the new product to the cart
-            await OrderProduct.create({
-              orderId: order.id,
-              productId: id,
-              amount,
-            });
-          }
+    // If user is admin, skip cart handling
+    if (isAdmin) {
+      return res.status(200).json({
+        msg: "Login successful",
+        token,
+        user: {
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          address: user.address,
+          role: "admin",
+        },
+        cart: null,
+      });
+    }
+
+    // Cart handling for regular users
+    let order = await Order.findOne({
+      where: { userId: user.id, status: "cart" },
+    });
+
+    // If cart is provided in the request, update or create cart
+    if (cart && Array.isArray(cart) && cart.length > 0) {
+      if (!order) {
+        // Create new cart
+        order = await Order.create({
+          address: user.address,
+          phone: user.phone,
+          paymentMethod: "pending",
+          userId: user.id,
+          status: "cart",
+        });
+      }
+
+      // Add or update products in the cart
+      for (const cartItem of cart) {
+        const { id, amount } = cartItem;
+
+        const product = await Product.findByPk(id);
+        if (!product) continue; // Skip if product doesn't exist
+
+        const availableStock = product.stock;
+
+        const existingProduct = await OrderProduct.findOne({
+          where: { orderId: order.id, productId: id },
+        });
+
+        if (existingProduct) {
+          const currentAmount = parseInt(existingProduct.amount, 10) || 0;
+          existingProduct.amount = Math.min(
+            currentAmount + amount,
+            availableStock
+          );
+          await existingProduct.save();
+        } else {
+          await OrderProduct.create({
+            orderId: order.id,
+            productId: id,
+            amount: Math.min(amount, availableStock),
+          });
         }
       }
-      // Fetch the updated order with its products
-      orderProducts = await OrderProduct.findAll({
+    }
+
+    // Fetch and return the updated cart if it exists
+    let cartData = null;
+    if (order) {
+      const orderProducts = await OrderProduct.findAll({
         where: { orderId: order.id },
         include: [{ model: Product, required: true }],
       });
-      cartData =
-        orderProducts.length > 0
-          ? {
-              id: order.id,
-              products: orderProducts.map((orderProduct) => ({
-                product: orderProduct.product,
-                amount: orderProduct.amount,
-              })),
-            }
-          : null;
+
+      if (orderProducts.length > 0) {
+        cartData = {
+          id: order.id,
+          products: orderProducts.map((op) => ({
+            product: op.product,
+            amount: op.amount,
+          })),
+        };
+      }
     }
 
-    // Return user data, role, and cart
+    // Return user data and cart
     return res.status(200).json({
       msg: "Login successful",
-      token: token,
+      token,
       user: {
         id: user.id,
         firstname: user.firstname,
         lastname: user.lastname,
         email: user.email,
         address: user.address,
-        role: user instanceof Admin ? "admin" : "user",
+        role: "user",
       },
       cart: cartData,
     });
