@@ -5,7 +5,7 @@ class Admin extends Model {
     Admin.init(
       {
         id: {
-          type: DataTypes.BIGINT(20),
+          type: DataTypes.BIGINT,
           primaryKey: true,
           autoIncrement: true,
         },

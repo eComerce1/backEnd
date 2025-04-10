@@ -6,7 +6,7 @@ const {
   clearCart,
   updateOrderStatus,
   updateOrderAddress,
-  getLastTenOrders,
+  getOrders,
   getOrdersLastMonth,
   getUserOrders,
 } = require("../controllers/orderController");
@@ -18,7 +18,7 @@ const router = express.Router();
 router.put("/:orderId/status", updateOrderStatus);
 
 router.get("/last-month", getOrdersLastMonth);
-router.get("/last-ten", getLastTenOrders);
+router.get("/", getOrders);
 
 router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
 

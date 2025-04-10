@@ -5,7 +5,7 @@ class OrderProduct extends Model {
     OrderProduct.init(
       {
         amount: {
-          type: DataTypes.BIGINT(20),
+          type: DataTypes.BIGINT,
           allowNull: false,
           defaultValue: 1,
         },
