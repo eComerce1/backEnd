@@ -56,8 +56,31 @@ async function index(req, res) {
   }
 }
 
+async function update(req, res) {
+  try {
+    const { id } = req.params;
+
+    const existingAdmin = await Admin.findOne({ where: { email } });
+    if (existingAdmin) {
+      return res.status(400).json({ msg: "Email is already registered." });
+    }
+
+    const [updated] = await Admin.update(req.body, { where: { id: id } });
+
+    if (updated) {
+      const updatedAdmin = await User.findOne({ where: { id: id } });
+      return res.status(200).json({ post: updatedAdmin });
+    }
+    return res.status(404).json({ message: "Admin no encontrado" });
+  } catch (error) {
+    console.error("Error al actualizar el admin:", error);
+    return res.status(500).send(error.message);
+  }
+}
+
 module.exports = {
   createAdmin,
   deleteAdmin,
   index,
+  update,
 };
