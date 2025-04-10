@@ -252,7 +252,7 @@ const getOrdersLastMonth = async (req, res) => {
   }
 };
 
-const getLastTenOrders = async (req, res) => {
+const getOrders = async (req, res) => {
   try {
     const orders = await Order.findAll({
       include: [
@@ -264,7 +264,6 @@ const getLastTenOrders = async (req, res) => {
         },
       ],
       order: [["createdAt", "DESC"]],
-      limit: 10,
     });
 
     const formattedOrders = orders.map((order) => ({
@@ -277,7 +276,7 @@ const getLastTenOrders = async (req, res) => {
 
     res.status(200).json({ orders: formattedOrders });
   } catch (error) {
-    console.log("Error fetching last 10 orders:", error);
+    console.log("Error fetching orders:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -312,6 +311,6 @@ module.exports = {
   updateOrderStatus,
   updateOrderAddress,
   getOrdersLastMonth,
-  getLastTenOrders,
+  getOrders,
   getUserOrders,
 };
