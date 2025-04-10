@@ -312,6 +312,10 @@ const getOrderWithProducts = async (req, res) => {
       where: { id: orderId },
       include: [
         {
+          model: User,
+          attributes: ["email"],
+        },
+        {
           model: Product,
           through: { attributes: ["amount", "orderId", "productId"] },
         },
@@ -322,15 +326,7 @@ const getOrderWithProducts = async (req, res) => {
       return res.status(200).json({ message: "Order is empty", products: [] });
     }
 
-    // Flatten OrderProduct.amount into each product object
-    const updatedProducts = order.products.map((product) => {
-      return {
-        ...product.toJSON(),
-        amount: product.OrderProduct.amount,
-      };
-    });
-
-    res.status(200).json({ products: updatedProducts });
+    res.status(200).json({ order });
   } catch (err) {
     console.error("Error fetching order:", err);
     res.status(500).json({ error: "Internal server error" });
