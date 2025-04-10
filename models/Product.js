@@ -6,7 +6,7 @@ class Product extends Model {
     Product.init(
       {
         id: {
-          type: DataTypes.BIGINT(20),
+          type: DataTypes.BIGINT,
           primaryKey: true,
           autoIncrement: true,
         },
@@ -17,7 +17,7 @@ class Product extends Model {
         complete_description: { type: DataTypes.TEXT, allowNull: false },
         stock: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
         categoryId: {
-          type: DataTypes.BIGINT(20),
+          type: DataTypes.BIGINT,
           allowNull: false,
           references: { model: "categories", key: "id" },
         },
