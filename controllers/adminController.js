@@ -42,7 +42,6 @@ async function deleteAdmin(req, res) {
     return res.status(500).json({ msg: error.message });
   }
 }
-console.log("createAdmin function:", typeof createAdmin);
 
 async function index(req, res) {
   try {

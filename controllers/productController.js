@@ -1,5 +1,5 @@
 const { Product, Category } = require("../models");
-
+const { Op } = require("sequelize");
 async function index(req, res) {
   try {
     const products = await Product.findAll();
@@ -28,7 +28,11 @@ async function getProductsByCategory(req, res) {
   try {
     const { categoryName } = req.params;
     const category = await Category.findOne({
-      where: { name: categoryName },
+      where: {
+        name: {
+          [Op.iLike]: categoryName.toLowerCase(),
+        },
+      },
     });
 
     if (!category) {

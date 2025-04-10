@@ -189,7 +189,7 @@ async function registerUser(req, res) {
       user: newUser,
     });
   } catch (error) {
-    console.error("Error in createUser:", error);
+    console.error("Error in register:", error);
     return res.status(500).json({ msg: error.message });
   }
 }
@@ -213,8 +213,6 @@ async function deleteUser(req, res) {
     return res.status(500).json({ msg: error.message });
   }
 }
-
-console.log("createUser function:", typeof createUser);
 
 module.exports = {
   login,

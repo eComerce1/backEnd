@@ -9,6 +9,7 @@ const {
   getOrders,
   getOrdersLastMonth,
   getUserOrders,
+  getOrderWithProducts,
 } = require("../controllers/orderController");
 
 const { expressjwt: checkJwt } = require("express-jwt");
@@ -19,7 +20,9 @@ router.put("/:orderId/status", updateOrderStatus);
 
 router.get("/last-month", getOrdersLastMonth);
 router.get("/", getOrders);
-
+/*ACÁ*/
+router.get("/:orderId", getOrderWithProducts);
+/*ACÁ*/
 router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
 
 router.get("/cart", getCart);

@@ -303,6 +303,40 @@ const getUserOrders = async (req, res) => {
     return res.status(500).json({ msg: error.message });
   }
 };
+/*ACÁ*/
+const getOrderWithProducts = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const order = await Order.findOne({
+      where: { id: orderId },
+      include: [
+        {
+          model: Product,
+          through: { attributes: ["amount", "orderId", "productId"] },
+        },
+      ],
+    });
+
+    if (!order) {
+      return res.status(200).json({ message: "Order is empty", products: [] });
+    }
+
+    // Flatten OrderProduct.amount into each product object
+    const updatedProducts = order.products.map((product) => {
+      return {
+        ...product.toJSON(),
+        amount: product.OrderProduct.amount,
+      };
+    });
+
+    res.status(200).json({ products: updatedProducts });
+  } catch (err) {
+    console.error("Error fetching order:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+/*ACÁ*/
 module.exports = {
   addToCart,
   getCart,
@@ -313,4 +347,5 @@ module.exports = {
   getOrdersLastMonth,
   getOrders,
   getUserOrders,
+  getOrderWithProducts,
 };
