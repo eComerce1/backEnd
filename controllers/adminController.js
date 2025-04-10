@@ -59,6 +59,7 @@ async function index(req, res) {
 async function update(req, res) {
   try {
     const { id } = req.params;
+    const { firstname, lastname, email } = req.body;
 
     const existingAdmin = await Admin.findOne({ where: { email } });
     if (existingAdmin) {
@@ -68,7 +69,7 @@ async function update(req, res) {
     const [updated] = await Admin.update(req.body, { where: { id: id } });
 
     if (updated) {
-      const updatedAdmin = await User.findOne({ where: { id: id } });
+      const updatedAdmin = await Admin.findOne({ where: { id: id } });
       return res.status(200).json({ post: updatedAdmin });
     }
     return res.status(404).json({ message: "Admin no encontrado" });
