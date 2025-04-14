@@ -303,7 +303,7 @@ const getUserOrders = async (req, res) => {
     return res.status(500).json({ msg: error.message });
   }
 };
-/*ACÁ*/
+
 const getOrderWithProducts = async (req, res) => {
   const { orderId } = req.params;
 
@@ -332,7 +332,7 @@ const getOrderWithProducts = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-/*ACÁ*/
+
 module.exports = {
   addToCart,
   getCart,
