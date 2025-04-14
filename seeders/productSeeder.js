@@ -334,10 +334,8 @@ module.exports = async () => {
     await Product.destroy({ where: {} });
     await Product.bulkCreate(products);
 
-    console.log(
-      "Se corrió el seeder de productos y se asignaron categorías correctamente."
-    );
+    console.log("Product seeder ran succefully.");
   } catch (error) {
-    console.error("Error al ejecutar el seeder de productos:", error);
+    console.error("Error running product seeder:", error);
   }
 };

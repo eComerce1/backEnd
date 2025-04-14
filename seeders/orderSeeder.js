@@ -35,6 +35,51 @@ module.exports = async () => {
   const oneMonthAgo = subMonths(now, 1);
   const twoYearsAgo = subYears(now, 2);
 
+  // Orders for user@hotmail.com
+  const userHotmail = await User.findOne({
+    where: { email: "user@hotmail.com" },
+  });
+
+  if (!userHotmail) {
+    console.log("Usuario específico no encontrado.");
+    return;
+  }
+
+  const statusesForHotmail = ["cart", "completed", "pending"];
+  const orderProducts = [];
+  const usedIndexes = new Set();
+
+  while (orderProducts.length < 2) {
+    const productIndex = Math.floor(Math.random() * products.length);
+    if (!usedIndexes.has(productIndex)) {
+      usedIndexes.add(productIndex);
+      orderProducts.push({
+        product: products[productIndex],
+        amount: Math.floor(Math.random() * 5) + 1,
+      });
+    }
+  }
+
+  for (let i = 0; i < 3; i++) {
+    const order = await Order.create({
+      userId: userHotmail.id,
+      status: statusesForHotmail[i],
+      address: userHotmail.address,
+      phone: userHotmail.phone,
+      paymentMethod: randomElement(paymentMethods),
+      createdAt: getRandomDate(oneMonthAgo, now),
+    });
+
+    for (const { product, amount } of orderProducts) {
+      await OrderProduct.create({
+        orderId: order.id,
+        productId: product.id,
+        amount,
+      });
+    }
+  }
+
+  // Random orders for random users
   for (let i = 0; i < 20; i++) {
     const user = randomElement(users);
     const numProducts = Math.floor(Math.random() * 3) + 1;

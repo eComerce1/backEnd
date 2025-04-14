@@ -24,11 +24,26 @@ module.exports = async () => {
       });
     }
 
+    const password = "1234";
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userHotmail = {
+      firstname: "Test",
+      lastname: "User",
+      email: "user@hotmail.com",
+      password: hashedPassword,
+      phone: faker.phone.number(),
+      address: faker.location.streetAddress(),
+      username: faker.internet.username(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    users.push(userHotmail);
+
     await User.destroy({ where: {} });
     await User.bulkCreate(users);
-    console.log("Seeder de usuarios ejecutado correctamente.");
+    console.log("User seeder ran successfully.");
   } catch (error) {
-    console.error("Error al ejecutar el seeder de usuarios:", error);
+    console.error("Error running user seeder:", error);
     throw error;
   }
 };

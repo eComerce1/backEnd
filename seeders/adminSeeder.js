@@ -2,7 +2,6 @@ const { Admin } = require("../models");
 const bcrypt = require("bcrypt");
 
 module.exports = async () => {
-  // Borrar admin anterior si existe
   await Admin.destroy({ where: {} });
 
   const password = "1234";
@@ -15,7 +14,5 @@ module.exports = async () => {
     password: hashedPassword,
   });
 
-  console.log(
-    "Admin user created with email: admin@example.com and password: 1234"
-  );
+  console.log("Admin seeder ran succesfully.");
 };

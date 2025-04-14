@@ -13,8 +13,8 @@ module.exports = async () => {
     await Category.destroy({ where: {} });
     await Category.bulkCreate(categoriesData, { ignoreDuplicates: true });
 
-    console.log("Categorías creadas correctamente.");
+    console.log("Category seeder ran succesfully.");
   } catch (error) {
-    console.error("Error al crear las categorías:", error);
+    console.error("Error running category seeder:", error);
   }
 };
