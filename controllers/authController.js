@@ -1,6 +1,31 @@
 const { User, Admin, Order, Product, OrderProduct } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+//Mandar mail
+async function recoveryToken(req, res) {
+  const user = await User.findOne({ where: { email: req.body.email } });
+
+  if (!user) return res.send("no existe usuario");
+  const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
+    expiresIn: "5m",
+  });
+
+  console.log(req.body);
+  res.json({
+    // recoveryUrl: `http://localhost:5173/reset?otp=${token}`,
+    recoveryUrl: `/reset?otp=${token}`,
+  });
+}
+
+async function resetPassword(req, res) {
+  console.log(req.body);
+  const user = await User.findByPk(req.auth.sub);
+  const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+  user.password = hashedPassword;
+
+  await user.save();
+  res.json(user);
+}
 
 async function login(req, res) {
   try {
@@ -218,4 +243,6 @@ module.exports = {
   login,
   registerUser,
   deleteUser,
+  recoveryToken,
+  resetPassword,
 };
