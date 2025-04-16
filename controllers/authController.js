@@ -15,7 +15,7 @@ async function recoveryToken(req, res) {
     expiresIn: "5m",
   });
 
-  const recoveryUrl = `http://localhost:5173/reset?otp=${token}`; //reemplazar por vercel cuando lo subamos
+  const recoveryUrl = `https://front-end-ten-sandy.vercel.app/reset?otp=${token}`;
 
   const transporter = nodemailer.createTransport({
     service: "Gmail",
