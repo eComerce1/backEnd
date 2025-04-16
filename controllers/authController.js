@@ -1,24 +1,50 @@
 const { User, Admin, Order, Product, OrderProduct } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-//Mandar mail
+
+const nodemailer = require("nodemailer");
+
 async function recoveryToken(req, res) {
   const user = await User.findOne({ where: { email: req.body.email } });
 
-  if (!user) return res.send("no existe usuario");
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
   const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
     expiresIn: "5m",
   });
 
-  console.log(req.body);
-  res.json({
-    // recoveryUrl: `http://localhost:5173/reset?otp=${token}`,
-    recoveryUrl: `/reset?otp=${token}`,
+  const recoveryUrl = `http://localhost:5173/reset?otp=${token}`; //reemplazar por vercel cuando lo subamos
+
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: "gyyo ilnn awlv qcyg",
+    },
   });
+
+  const mailOptions = {
+    from: '"Your App" <no-reply@yourapp.com>',
+    to: user.email,
+    subject: "Password Recovery",
+    html: `<p>Hello ${user.firstname},</p>
+           <p>You requested a password reset. Click the link below to reset it:</p>
+           <a href="${recoveryUrl}">${recoveryUrl}</a>
+           <p>This link will expire in 5 minutes.</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Recovery email sent successfully." });
+  } catch (error) {
+    console.error("Email sending error:", error);
+    res.status(500).json({ error: "Failed to send recovery email." });
+  }
 }
 
 async function resetPassword(req, res) {
-  console.log(req.body);
   const user = await User.findByPk(req.auth.sub);
   const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
   user.password = hashedPassword;
