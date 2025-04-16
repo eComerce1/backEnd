@@ -8,7 +8,6 @@ const categoryRoutes = require("./categoryRoutes");
 const devRoutes = require("./devRoutes");
 
 module.exports = (app) => {
-  app.use("/", authRoutes);
   app.use("/admin", adminRoutes);
   app.use("/users", usersRoutes);
   app.use("/products", productsRoutes);
@@ -16,4 +15,5 @@ module.exports = (app) => {
   app.use("/payment", paymentRoutes);
   app.use("/categories", categoryRoutes);
   app.use("/dev", devRoutes);
+  app.use("/", authRoutes);
 };

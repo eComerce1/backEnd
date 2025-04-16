@@ -27,7 +27,7 @@ async function index(req, res) {
     const products = await Product.findAll();
     return res.json({ products });
   } catch (error) {
-    console.error("Error fetching products:", error.message);
+    console.log("Error fetching products:", error.message);
     return res.status(500).json({ msg: "Internal Server Error" });
   }
 }
