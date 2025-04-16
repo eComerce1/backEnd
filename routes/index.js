@@ -8,9 +8,9 @@ const categoryRoutes = require("./categoryRoutes");
 const devRoutes = require("./devRoutes");
 
 module.exports = (app) => {
+  app.use("/products", productsRoutes);
   app.use("/admin", adminRoutes);
   app.use("/users", usersRoutes);
-  app.use("/products", productsRoutes);
   app.use("/orders", ordersRoutes);
   app.use("/payment", paymentRoutes);
   app.use("/categories", categoryRoutes);
